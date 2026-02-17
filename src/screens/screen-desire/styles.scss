@@ -1,0 +1,64 @@
+@use '@/shared/styles/colors.scss' as c;
+
+.desire {
+  position: relative;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: clamp(42px, 9vh, 92px) 16px 0;
+  text-align: center;
+  overflow-x: clip;
+}
+
+.desire::before {
+  content: '';
+  position: absolute;
+  top: -90px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% + 90px);
+  height: 360px;
+  pointer-events: none;
+  background:
+    radial-gradient(closest-side, rgba(255, 140, 0, 0.11), transparent 72%),
+    radial-gradient(closest-side, rgba(0, 0, 0, 0.05), transparent 78%);
+  filter: blur(7px);
+  opacity: 0.95;
+}
+
+.desire__title {
+  margin: 0;
+  font-size: clamp(28px, 4.4vw, 46px);
+  line-height: 1.08;
+  font-weight: 650;
+  color: c.get-color(gray);
+}
+
+.desire__accent {
+  position: relative;
+  color: c.get-color(orange);
+}
+
+.desire__accent::after {
+  content: '';
+  position: absolute;
+  left: -10px;
+  right: -10px;
+  bottom: 0.06em;
+  height: 0.62em;
+  border-radius: 999px;
+  background: rgba(255, 140, 0, 0.14);
+  z-index: -1;
+}
+
+.desire__script {
+  margin: 14px 0 0;
+  font-size: 34px;
+  line-height: 1;
+  color: c.get-color(orange);
+  opacity: 0.95;
+}
+
+/* рукописный акцент */
+.script {
+  font-family: 'Marck Script', 'Inter', cursive;
+}

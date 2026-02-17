@@ -13,7 +13,7 @@
       class="screen"
       :class="{ active: currentIndex === 1, leaving: leavingIndex === 1 }"
     >
-      <ScreenFun @next="next" @back="back" />
+      <ScreenFun :active="currentIndex === 1" @next="next" @back="back" />
     </div>
 
     <div
@@ -21,7 +21,7 @@
       class="screen"
       :class="{ active: currentIndex === 2, leaving: leavingIndex === 2 }"
     >
-      <ScreenHonest @next="next" @back="back" />
+      <ScreenHonest :active="currentIndex === 2" @next="next" @back="back" />
     </div>
 
     <div
@@ -103,7 +103,7 @@
     const tl = gsap.timeline({
       defaults: { ease: 'power2.out' },
       onComplete: () => {
-        gsap.set([fromEl, toEl], { clearProps: 'opacity,transform,filter' });
+        gsap.set([fromEl, toEl], { clearProps: 'transform,filter' });
         leavingIndex.value = null;
         isLocked.value = false;
       },

@@ -8,28 +8,41 @@
         <span class="intro__accent">что ты со мной делаешь?</span>
       </h1>
 
-      <p class="intro__note script">…и да, это немного хитро 😌</p>
+      <p class="intro__note script">{{ text }}</p>
     </div>
 
     <template #footer>
-      <button ref="btn" class="button-primary intro__btn" type="button" @click="$emit('next')">
-        Показать
-      </button>
+      <div ref="btnWrap">
+        <ButtonPrimary
+          ref="btn"
+          class="button-primary intro__btn"
+          type="button"
+          @click="$emit('next')"
+        >
+          Показать
+        </ButtonPrimary>
+      </div>
     </template>
   </FullScreenSection>
 </template>
 
 <script setup lang="ts">
-  import { onMounted, ref } from 'vue';
+  import { onMounted, ref, onUnmounted } from 'vue';
+
   import gsap from 'gsap';
   import { FullScreenSection } from '@/shared/ui/full-screen-section';
+  import { ButtonPrimary } from '@/shared/ui/button-primary';
+  import { useTypewriter } from '@/shared/composibles';
 
   defineOptions({ name: 'ScreenIntro' });
 
   defineEmits<{ (e: 'next'): void }>();
 
+  const full = '…и да, это не случайно 😌';
+  const { text, start, stop } = useTypewriter(full, 80);
+
   const root = ref<HTMLElement | null>(null);
-  const btn = ref<HTMLButtonElement | null>(null);
+  const btnWrap = ref<HTMLButtonElement | null>(null);
 
   onMounted(() => {
     if (!root.value) return;
@@ -45,14 +58,18 @@
       ease: 'power2.out',
     });
 
-    if (btn.value) {
+    if (btnWrap.value) {
       gsap.fromTo(
-        btn.value,
+        btnWrap.value,
         { y: 12, opacity: 0 },
         { y: 0, opacity: 1, duration: 0.55, delay: 0.25, ease: 'power2.out' },
       );
     }
+
+    start();
   });
+
+  onUnmounted(() => stop());
 </script>
 
 <style lang="scss" scoped>
