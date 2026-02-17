@@ -1,3 +1,7 @@
+@use 'sass:map';
+@use 'sass:meta';
+@use 'sass:color';
+
 $primary-colors: (
   red: #ff4d4f,
   orange: #ff8200,
@@ -37,26 +41,26 @@ $background-colors: (
     @return $color;
   }
 
-  @if type-of($type) != "number" {
+  @if meta.type-of($type) != 'number' {
     @error "get-color(): $type must be a number (e.g. 100, 600, 800). Got: #{inspect($type)}";
   }
 
-  @if not map-has-key($alpha-channels, $type) {
-    @error "get-color(): unknown $type '#{$type}'. Allowed: #{map-keys($alpha-channels)}";
+  @if not map.has-key($alpha-channels, $type) {
+    @error "get-color(): unknown $type '#{$type}'. Allowed: #{map.keys($alpha-channels)}";
   }
 
   @if $type == 600 {
     @return $color;
   }
 
-  $alpha: map-get($alpha-channels, $type);
-  $background-color: map-get($background-colors, light);
+  $alpha: map.get($alpha-channels, $type);
+  $background-color: map.get($background-colors, light);
 
   @if $type > 600 {
-    $background-color: map-get($background-colors, dark);
+    $background-color: map.get($background-colors, dark);
   }
 
-  @return mix($color, $background-color, $alpha);
+  @return color.mix($color, $background-color, $alpha);
 }
 
 @function get-color-by-type($color, $type: false) {
@@ -64,7 +68,7 @@ $background-colors: (
 }
 
 @function get-color($color, $type: false) {
-  $primary-color: map-get($primary-colors, $color);
+  $primary-color: map.get($primary-colors, $color);
 
   @if $primary-color != null {
     @return get-color-by-type($primary-color, $type);

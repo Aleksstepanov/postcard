@@ -1,5 +1,6 @@
-@import "./fonts.scss";
-@import "./variables.scss";
-@import "./breakpoints.scss";
-@import "./shortcuts.scss";
-@import "./global.scss";
+@use './variables.scss';
+@use './colors.scss';
+@use './breakpoints.scss';
+@use './shortcuts.scss';
+@use './fonts.scss';
+@use './global.scss';

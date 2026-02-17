@@ -1,0 +1,45 @@
+@use '@/shared/styles/colors.scss' as c;
+
+.intro__kicker {
+  font-size: 14px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  opacity: 0.9;
+}
+
+.intro__title {
+  margin: 0;
+  font-size: clamp(28px, 4.4vw, 44px);
+  line-height: 1.08;
+  font-weight: 600;
+  color: c.get-color(gray);
+}
+
+.intro__accent {
+  color: c.get-color(orange);
+}
+
+.intro__note {
+  margin: 0;
+  opacity: 0.9;
+}
+
+/* рукописный акцент */
+.script {
+  font-family: 'Marck Script', 'Inter', cursive;
+  font-size: 22px;
+  line-height: 1.1;
+}
+
+/* кнопка: чуть “премиум” */
+.intro__btn {
+  border-radius: 999px;
+  padding: 14px 28px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+  transition: transform 0.15s ease;
+}
+.intro__btn:active {
+  transform: translateY(1px);
+}

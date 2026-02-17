@@ -1,4 +1,7 @@
 // breakpoints.scss
+@use 'sass:map';
+@use 'sass:meta';
+
 $screen: (
   desktopWide: 1919px,
   desktop: 1320px,
@@ -8,73 +11,73 @@ $screen: (
 );
 
 @mixin sm {
-  @media screen and (max-width: map-get($screen, mobile)) {
+  @media screen and (max-width: map.get($screen, mobile)) {
     @content;
   }
 }
 
 @mixin mdMax {
-  @media screen and (max-width: map-get($screen, tablet)) {
+  @media screen and (max-width: map.get($screen, tablet)) {
     @content;
   }
 }
 
 @mixin md {
-  @media (min-width: map-get($screen, mobile)) and (max-width: map-get($screen, tablet)) {
+  @media (min-width: map.get($screen, mobile)) and (max-width: map.get($screen, tablet)) {
     @content;
   }
 }
 
 @mixin mdMin {
-  @media screen and (min-width: map-get($screen, mobile)) {
+  @media screen and (min-width: map.get($screen, mobile)) {
     @content;
   }
 }
 
 @mixin containerMin {
-  @media screen and (min-width: map-get($screen, container)) {
+  @media screen and (min-width: map.get($screen, container)) {
     @content;
   }
 }
 
 @mixin containerMax {
-  @media screen and (max-width: map-get($screen, container)) {
+  @media screen and (max-width: map.get($screen, container)) {
     @content;
   }
 }
 
 @mixin lg {
-  @media (min-width: map-get($screen, tablet)) and (max-width: map-get($screen, desktop)) {
+  @media (min-width: map.get($screen, tablet)) and (max-width: map.get($screen, desktop)) {
     @content;
   }
 }
 
 @mixin lgMax {
-  @media screen and (max-width: map-get($screen, desktop)) {
+  @media screen and (max-width: map.get($screen, desktop)) {
     @content;
   }
 }
 
 @mixin xlgMin {
-  @media screen and (min-width: map-get($screen, desktop)) {
+  @media screen and (min-width: map.get($screen, desktop)) {
     @content;
   }
 }
 
 @mixin xlg {
-  @media (min-width: map-get($screen, desktop)) and (max-width: map-get($screen, desktopWide)) {
+  @media (min-width: map.get($screen, desktop)) and (max-width: map.get($screen, desktopWide)) {
     @content;
   }
 }
 
 @mixin xxlg {
-  @media screen and (min-width: map-get($screen, desktopWide)) {
+  @media screen and (min-width: map.get($screen, desktopWide)) {
     @content;
   }
 }
 
 @mixin desktop {
-  @media screen and (min-width: map-get($screen, tablet)) {
+  @media screen and (min-width: map.get($screen, tablet)) {
     @content;
   }
 }
