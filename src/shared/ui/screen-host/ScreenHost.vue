@@ -5,7 +5,7 @@
       class="screen"
       :class="{ active: currentIndex === 0, leaving: leavingIndex === 0 }"
     >
-      <ScreenIntro @next="next" />
+      <ScreenIntro :active="currentIndex === 0" @next="next" />
     </div>
 
     <div
@@ -29,7 +29,7 @@
       class="screen"
       :class="{ active: currentIndex === 3, leaving: leavingIndex === 3 }"
     >
-      <ScreenDesire @next="next" @back="back" />
+      <ScreenDesire :active="currentIndex === 3" @next="next" />
     </div>
 
     <div
@@ -37,14 +37,14 @@
       class="screen"
       :class="{ active: currentIndex === 4, leaving: leavingIndex === 4 }"
     >
-      <ScreenFinal @close="reset" @back="back" />
+      <ScreenFinal :active="currentIndex === 4" @close="reset" />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
   import { nextTick, ref } from 'vue';
-  import gsap from 'gsap';
+  import { gsap } from 'gsap';
 
   import { ScreenIntro, ScreenFun, ScreenHonest, ScreenDesire, ScreenFinal } from '@/screens';
 

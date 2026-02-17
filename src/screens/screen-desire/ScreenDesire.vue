@@ -10,36 +10,47 @@
     </div>
 
     <template #footer>
-      <ButtonPrimary ref="btnWrap" @click="$emit('next')"> Дальше </ButtonPrimary>
+      <div ref="btnWrap">
+        <ButtonPrimary @click="$emit('next')">Дальше</ButtonPrimary>
+      </div>
     </template>
   </FullScreenSection>
 </template>
 
 <script setup lang="ts">
-  import { onMounted, ref } from 'vue';
-  import gsap from 'gsap';
+  import { nextTick, ref, watch } from 'vue';
+  import { gsap } from 'gsap';
 
   import { FullScreenSection } from '@/shared/ui/full-screen-section';
   import { ButtonPrimary } from '@/shared/ui/button-primary';
 
   defineOptions({ name: 'ScreenDesire' });
 
+  const props = defineProps<{ active: boolean }>();
+
   defineEmits<{ (e: 'next'): void }>();
 
   const root = ref<HTMLElement | null>(null);
   const btnWrap = ref<HTMLElement | null>(null);
 
-  onMounted(() => {
+  const animateIn = () => {
     if (!root.value) return;
 
-    const title = root.value.querySelector('.desire__title');
-    const script = root.value.querySelector('.desire__script');
+    const title = root.value.querySelector<HTMLElement>('.desire__title');
+    const script = root.value.querySelector<HTMLElement>('.desire__script');
 
-    gsap.set([title, script], { opacity: 0, y: 10 });
+    const content = [title, script].filter(Boolean) as HTMLElement[];
 
-    const tl = gsap.timeline({ defaults: { ease: 'power2.out' } });
-    tl.to(title, { opacity: 1, y: 0, duration: 0.55 }, 0);
-    tl.to(script, { opacity: 1, y: 0, duration: 0.55 }, 0.18);
+    gsap.killTweensOf(content);
+    if (btnWrap.value) gsap.killTweensOf(btnWrap.value);
+
+    if (content.length) {
+      gsap.set(content, { opacity: 0, y: 10 });
+
+      const tl = gsap.timeline({ defaults: { ease: 'power2.out' } });
+      if (title) tl.to(title, { opacity: 1, y: 0, duration: 0.55 }, 0);
+      if (script) tl.to(script, { opacity: 1, y: 0, duration: 0.55 }, 0.18);
+    }
 
     if (btnWrap.value) {
       gsap.fromTo(
@@ -48,7 +59,26 @@
         { y: 0, opacity: 1, duration: 0.55, delay: 0.25, ease: 'power2.out' },
       );
     }
-  });
+  };
+
+  watch(
+    () => props.active,
+    async (isActive) => {
+      if (!isActive) {
+        if (root.value) {
+          const title = root.value.querySelector<HTMLElement>('.desire__title');
+          const script = root.value.querySelector<HTMLElement>('.desire__script');
+          gsap.killTweensOf([title, script].filter(Boolean));
+        }
+        if (btnWrap.value) gsap.killTweensOf(btnWrap.value);
+        return;
+      }
+
+      await nextTick();
+      animateIn();
+    },
+    { immediate: true },
+  );
 </script>
 
 <style scoped lang="scss">

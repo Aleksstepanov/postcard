@@ -4,9 +4,9 @@
       <slot />
     </div>
 
-    <div v-if="$slots.footer" class="section__footer">
+    <footer class="section__footer" :class="footerClass">
       <slot name="footer" />
-    </div>
+    </footer>
   </section>
 </template>
 
@@ -14,6 +14,7 @@
   defineOptions({
     name: 'FullScreenSection',
   });
+  defineProps<{ footerClass?: string }>();
 </script>
 <style lang="scss" scoped>
   @use './styles.scss' as *;

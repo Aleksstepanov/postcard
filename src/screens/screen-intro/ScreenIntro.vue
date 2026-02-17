@@ -13,12 +13,7 @@
 
     <template #footer>
       <div ref="btnWrap">
-        <ButtonPrimary
-          ref="btn"
-          class="button-primary intro__btn"
-          type="button"
-          @click="$emit('next')"
-        >
+        <ButtonPrimary class="button-primary intro__btn" type="button" @click="$emit('next')">
           Показать
         </ButtonPrimary>
       </div>
@@ -27,14 +22,16 @@
 </template>
 
 <script setup lang="ts">
-  import { onMounted, ref, onUnmounted } from 'vue';
+  import { nextTick, onUnmounted, ref, watch } from 'vue';
+  import { gsap } from 'gsap';
 
-  import gsap from 'gsap';
   import { FullScreenSection } from '@/shared/ui/full-screen-section';
   import { ButtonPrimary } from '@/shared/ui/button-primary';
   import { useTypewriter } from '@/shared/composibles';
 
   defineOptions({ name: 'ScreenIntro' });
+
+  const props = defineProps<{ active: boolean }>();
 
   defineEmits<{ (e: 'next'): void }>();
 
@@ -42,21 +39,28 @@
   const { text, start, stop } = useTypewriter(full, 80);
 
   const root = ref<HTMLElement | null>(null);
-  const btnWrap = ref<HTMLButtonElement | null>(null);
+  const btnWrap = ref<HTMLElement | null>(null);
 
-  onMounted(() => {
+  const animateIn = () => {
     if (!root.value) return;
 
-    const els = root.value.querySelectorAll('.intro__kicker, .intro__title, .intro__note');
+    const els = Array.from(
+      root.value.querySelectorAll<HTMLElement>('.intro__kicker, .intro__title, .intro__note'),
+    );
 
-    gsap.set(els, { y: 10, opacity: 0 });
-    gsap.to(els, {
-      y: 0,
-      opacity: 1,
-      duration: 0.6,
-      stagger: 0.08,
-      ease: 'power2.out',
-    });
+    gsap.killTweensOf(els);
+    if (btnWrap.value) gsap.killTweensOf(btnWrap.value);
+
+    if (els.length) {
+      gsap.set(els, { y: 10, opacity: 0 });
+      gsap.to(els, {
+        y: 0,
+        opacity: 1,
+        duration: 0.6,
+        stagger: 0.08,
+        ease: 'power2.out',
+      });
+    }
 
     if (btnWrap.value) {
       gsap.fromTo(
@@ -65,11 +69,28 @@
         { y: 0, opacity: 1, duration: 0.55, delay: 0.25, ease: 'power2.out' },
       );
     }
+  };
 
-    start();
+  watch(
+    () => props.active,
+    async (isActive) => {
+      if (!isActive) {
+        stop();
+        return;
+      }
+
+      await nextTick();
+      animateIn();
+
+      stop();
+      start();
+    },
+    { immediate: true },
+  );
+
+  onUnmounted(() => {
+    stop();
   });
-
-  onUnmounted(() => stop());
 </script>
 
 <style lang="scss" scoped>

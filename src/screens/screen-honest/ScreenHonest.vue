@@ -1,5 +1,5 @@
 <template>
-  <FullScreenSection>
+  <FullScreenSection :footer-class="isFocused ? 'footer--kb' : ''">
     <div ref="root" class="honest">
       <h2 class="honest__title">Можно чуть-чуть честно?</h2>
 
@@ -10,6 +10,7 @@
       <div class="honest__field">
         <input
           id="honestWord"
+          ref="inputEl"
           v-model="rawValue"
           class="honest__input"
           type="text"
@@ -18,29 +19,29 @@
           autocapitalize="sentences"
           spellcheck="false"
           :placeholder="placeholder"
-          @focus="isFocused = true"
-          @blur="isFocused = false"
+          @focus="handleFocus"
+          @blur="handleBlur"
         />
 
         <p v-if="prettyValue" class="honest__preview script">“{{ prettyValue }}”</p>
-
         <p v-else class="honest__hint">Не переживай — можно любое. Одно. 🙂</p>
       </div>
     </div>
 
     <template #footer>
       <div ref="btnWrap" class="honest__footer">
-        <ButtonPrimary :disabled="!canGoNext" @click="$emit('next')"> Дальше </ButtonPrimary>
+        <ButtonPrimary :disabled="!canGoNext" @click="$emit('next')">Дальше</ButtonPrimary>
       </div>
     </template>
   </FullScreenSection>
 </template>
 
 <script setup lang="ts">
-  import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
+  import { computed, nextTick, onUnmounted, ref, watch } from 'vue';
+  import { gsap } from 'gsap';
+
   import { FullScreenSection } from '@/shared/ui/full-screen-section';
   import { ButtonPrimary } from '@/shared/ui/button-primary';
-  import gsap from 'gsap';
 
   defineOptions({ name: 'ScreenHonest' });
 
@@ -54,8 +55,10 @@
 
   const rawValue = ref('');
   const isFocused = ref(false);
-  const btnWrap = ref<HTMLButtonElement | null>(null);
+  const inputEl = ref<HTMLInputElement | null>(null);
+
   const root = ref<HTMLElement | null>(null);
+  const btnWrap = ref<HTMLElement | null>(null);
 
   const idx = ref(0);
   let timer: number | null = null;
@@ -66,18 +69,45 @@
   });
 
   const prettyValue = computed(() => rawValue.value.trim());
-
   const canGoNext = computed(() => prettyValue.value.length > 0);
 
-  const startScreen = () => {
+  const clearTimer = () => {
+    if (timer !== null) {
+      window.clearInterval(timer);
+      timer = null;
+    }
+  };
+
+  const handleFocus = async () => {
+    isFocused.value = true;
+
+    await nextTick();
+    window.setTimeout(() => {
+      btnWrap.value?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    }, 80);
+  };
+
+  const handleBlur = () => {
+    isFocused.value = false;
+  };
+
+  const startPlaceholderLoop = () => {
+    clearTimer();
     timer = window.setInterval(() => {
       if (isFocused.value && rawValue.value.trim().length > 0) return;
       idx.value += 1;
     }, 1800);
+  };
 
-    if (root.value) {
-      const els = root.value.querySelectorAll('.intro__kicker, .intro__title, .intro__note');
+  const animateIn = () => {
+    if (!root.value) return;
 
+    const els = Array.from(
+      root.value.querySelectorAll<HTMLElement>('.honest__title, .honest__label, .honest__field'),
+    );
+
+    if (els.length) {
+      gsap.killTweensOf(els);
       gsap.set(els, { y: 10, opacity: 0 });
       gsap.to(els, {
         y: 0,
@@ -86,29 +116,49 @@
         stagger: 0.08,
         ease: 'power2.out',
       });
+    }
 
-      if (btnWrap.value) {
-        gsap.fromTo(
-          btnWrap.value,
-          { y: 12, opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.55, delay: 0.25, ease: 'power2.out' },
-        );
-      }
+    if (btnWrap.value) {
+      gsap.killTweensOf(btnWrap.value);
+      gsap.fromTo(
+        btnWrap.value,
+        { y: 12, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.55, delay: 0.25, ease: 'power2.out' },
+      );
     }
   };
 
   watch(
     () => props.active,
-    (isActive) => {
+    async (isActive) => {
       if (!isActive) {
-        if (timer) window.clearInterval(timer);
+        clearTimer();
+
+        if (root.value) {
+          const els = Array.from(
+            root.value.querySelectorAll<HTMLElement>(
+              '.honest__title, .honest__label, .honest__field',
+            ),
+          );
+          gsap.killTweensOf(els);
+        }
+        if (btnWrap.value) gsap.killTweensOf(btnWrap.value);
+
         rawValue.value = '';
-      } else {
-        startScreen();
+        return;
       }
+
+      startPlaceholderLoop();
+
+      await nextTick();
+      animateIn();
     },
     { immediate: true },
   );
+
+  onUnmounted(() => {
+    clearTimer();
+  });
 </script>
 
 <style scoped lang="scss">

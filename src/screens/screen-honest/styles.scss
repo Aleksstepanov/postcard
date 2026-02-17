@@ -83,3 +83,7 @@
 .button-ghost:active {
   opacity: 1;
 }
+
+.footer--kb {
+  padding-bottom: calc(36px + env(safe-area-inset-bottom) + 220px);
+}

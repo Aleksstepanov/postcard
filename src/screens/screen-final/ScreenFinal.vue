@@ -1,6 +1,6 @@
 <template>
   <FullScreenSection>
-    <div class="final">
+    <div ref="root" class="final">
       <p class="final__kicker">Вот и всё.</p>
 
       <h2 class="final__title">
@@ -16,29 +16,89 @@
     </div>
 
     <template #footer>
-      <div class="final__footer">
-        <ButtonPrimary v-if="!isRevealed" @click="reveal"> Ок </ButtonPrimary>
-
-        <ButtonPrimary v-else @click="$emit('close')"> Закрыть </ButtonPrimary>
+      <div ref="footer" class="final__footer">
+        <ButtonPrimary v-if="!isRevealed" @click="reveal">Ок</ButtonPrimary>
+        <ButtonPrimary v-else @click="$emit('close')">Закрыть</ButtonPrimary>
       </div>
     </template>
   </FullScreenSection>
 </template>
 
 <script setup lang="ts">
-  import { ref } from 'vue';
+  import { nextTick, ref, watch } from 'vue';
+  import { gsap } from 'gsap';
+
   import { FullScreenSection } from '@/shared/ui/full-screen-section';
   import { ButtonPrimary } from '@/shared/ui/button-primary';
 
   defineOptions({ name: 'ScreenFinal' });
 
+  const props = defineProps<{ active: boolean }>();
+
   defineEmits<{ (e: 'close'): void }>();
 
   const isRevealed = ref(false);
 
+  const root = ref<HTMLElement | null>(null);
+  const footer = ref<HTMLElement | null>(null);
+
   const reveal = () => {
     isRevealed.value = true;
   };
+
+  const animateIn = () => {
+    if (!root.value) return;
+
+    const els = Array.from(
+      root.value.querySelectorAll<HTMLElement>('.final__kicker, .final__title, .final__note'),
+    );
+
+    gsap.killTweensOf(els);
+    if (footer.value) gsap.killTweensOf(footer.value);
+
+    if (els.length) {
+      gsap.set(els, { y: 10, opacity: 0 });
+      gsap.to(els, {
+        y: 0,
+        opacity: 1,
+        duration: 0.6,
+        stagger: 0.08,
+        ease: 'power2.out',
+      });
+    }
+
+    if (footer.value) {
+      gsap.fromTo(
+        footer.value,
+        { y: 12, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.55, delay: 0.2, ease: 'power2.out' },
+      );
+    }
+  };
+
+  watch(
+    () => props.active,
+    async (isActive) => {
+      if (!isActive) {
+        // важный момент: при уходе сбрасываем, чтобы при возврате финал снова был “первый раз”
+        isRevealed.value = false;
+
+        if (root.value) {
+          const els = Array.from(
+            root.value.querySelectorAll<HTMLElement>('.final__kicker, .final__title, .final__note'),
+          );
+          gsap.killTweensOf(els);
+        }
+        if (footer.value) gsap.killTweensOf(footer.value);
+
+        return;
+      }
+
+      await nextTick();
+      animateIn();
+    },
+    { immediate: true },
+  );
 </script>
 
 <style scoped lang="scss">
