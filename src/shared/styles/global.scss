@@ -1,5 +1,5 @@
-@use "./breakpoints.scss" as *;
-@use "./colors.scss" as c;
+@use './breakpoints.scss' as *;
+@use './colors.scss' as c;
 
 /* ===== Base reset ===== */
 
@@ -11,7 +11,8 @@
 
 html,
 body {
-  height: 100%;
+  width: 100%;
+  overflow-x: hidden;
 }
 
 body {
@@ -19,7 +20,7 @@ body {
   min-height: 100dvh;
   overflow-x: hidden;
   font-family:
-    "Inter",
+    'Inter',
     system-ui,
     -apple-system,
     sans-serif;

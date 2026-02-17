@@ -12,7 +12,7 @@
     </div>
 
     <template #footer>
-      <button class="button-primary intro__btn" type="button" @click="$emit('next')">
+      <button ref="btn" class="button-primary intro__btn" type="button" @click="$emit('next')">
         Показать
       </button>
     </template>
@@ -24,20 +24,17 @@
   import gsap from 'gsap';
   import { FullScreenSection } from '@/shared/ui/full-screen-section';
 
-  defineOptions({
-    name: 'ScreenIntro',
-  });
+  defineOptions({ name: 'ScreenIntro' });
 
   defineEmits<{ (e: 'next'): void }>();
 
   const root = ref<HTMLElement | null>(null);
+  const btn = ref<HTMLButtonElement | null>(null);
 
   onMounted(() => {
     if (!root.value) return;
 
-    const els = root.value.querySelectorAll(
-      '.intro__kicker, .intro__title, .intro__note, .intro__btn',
-    );
+    const els = root.value.querySelectorAll('.intro__kicker, .intro__title, .intro__note');
 
     gsap.set(els, { y: 10, opacity: 0 });
     gsap.to(els, {
@@ -47,6 +44,14 @@
       stagger: 0.08,
       ease: 'power2.out',
     });
+
+    if (btn.value) {
+      gsap.fromTo(
+        btn.value,
+        { y: 12, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.55, delay: 0.25, ease: 'power2.out' },
+      );
+    }
   });
 </script>
 

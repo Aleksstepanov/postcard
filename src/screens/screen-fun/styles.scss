@@ -1,0 +1,53 @@
+@use '@/shared/styles/colors.scss' as c;
+
+.fun {
+  align-self: stretch; /* заставит flex-item растянуться по ширине */
+  min-width: 0; /* чтобы не было странных переполнений */
+  padding: 0 16px;
+  text-align: center;
+}
+
+.fun__text {
+  margin: 0;
+  display: inline-block; /* ключ */
+  text-align: center;
+
+  max-width: 520px; /* нормальная ширина строки */
+  width: min(520px, 100%); /* но не больше контейнера */
+
+  font-size: clamp(22px, 3.6vw, 34px);
+  line-height: 1.22;
+  font-weight: 600;
+  color: c.get-color(gray);
+  letter-spacing: -0.005em;
+}
+
+.fun__hand {
+  margin: 18px 0 0;
+  display: inline-block; /* чтобы тоже центрировалось “как блок” */
+  max-width: 520px;
+  width: min(520px, 100%);
+  opacity: 0.92;
+  transform: rotate(-1deg);
+}
+
+.script {
+  font-family: 'Marck Script', 'Inter', cursive;
+  font-size: 24px;
+  line-height: 1.05;
+}
+
+.fun__btn {
+  border-radius: 999px;
+  padding: 14px 28px;
+  font-weight: 650;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.2s ease;
+}
+
+.fun__btn:active {
+  transform: translateY(1px);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.12);
+}

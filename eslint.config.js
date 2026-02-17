@@ -3,6 +3,7 @@ import pluginVue from 'eslint-plugin-vue';
 import prettier from 'eslint-config-prettier';
 import pluginPrettier from 'eslint-plugin-prettier';
 import tseslint from 'typescript-eslint';
+import globals from 'globals';
 
 export default [
   {
@@ -14,6 +15,14 @@ export default [
   ...tseslint.configs.recommended,
 
   ...pluginVue.configs['flat/recommended'],
+
+  {
+    languageOptions: {
+      globals: {
+        ...globals.browser,
+      },
+    },
+  },
 
   {
     files: ['**/*.vue'],

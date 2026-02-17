@@ -1,14 +1,14 @@
 <template>
   <BasicLayout>
-    <ScreenIntro v-if="step === 0" @next="step = 1" />
-    <div v-else>Следующий экран…</div>
+    <ScreenHost />
   </BasicLayout>
 </template>
 
 <script setup lang="ts">
-  import { ref } from 'vue';
   import { BasicLayout } from '@/shared/ui/basic-layout';
-  import { ScreenIntro } from '@/screens/screen-intro';
+  import { ScreenHost } from '@/shared/ui/screen-host';
 
-  const step = ref(0);
+  defineOptions({
+    name: 'App',
+  });
 </script>

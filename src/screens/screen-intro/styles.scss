@@ -1,22 +1,68 @@
 @use '@/shared/styles/colors.scss' as c;
 
-.intro__kicker {
-  font-size: 14px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+.intro {
+  position: relative;
+  max-width: 720px;
+  margin: 0 auto;
+
+  padding: clamp(48px, 10vh, 96px) 16px 0;
+
+  text-align: center;
+
+  overflow-x: clip;
+}
+
+.intro::before {
+  content: '';
+  position: absolute;
+
+  top: -80px;
+  left: 50%;
+  transform: translateX(-50%);
+
+  width: calc(100% + 80px);
+  height: 320px;
+
+  pointer-events: none;
+  background:
+    radial-gradient(closest-side, rgba(255, 140, 0, 0.1), transparent 70%),
+    radial-gradient(closest-side, rgba(0, 0, 0, 0.06), transparent 75%);
+  filter: blur(6px);
   opacity: 0.9;
 }
 
+.intro__kicker {
+  margin: 0 0 14px;
+  font-size: 14px;
+  letter-spacing: 0.04em; /* меньше “офиса” */
+  text-transform: uppercase;
+  opacity: 0.85;
+}
+
 .intro__title {
-  margin: 0;
-  font-size: clamp(28px, 4.4vw, 44px);
-  line-height: 1.08;
-  font-weight: 600;
+  margin: 0 0 14px;
+  font-size: clamp(30px, 4.6vw, 48px);
+  line-height: 1.06;
+  font-weight: 650;
   color: c.get-color(gray);
 }
 
 .intro__accent {
+  position: relative;
   color: c.get-color(orange);
+}
+
+.intro__accent::after {
+  content: '';
+  position: absolute;
+  left: -10px;
+  right: -10px;
+  bottom: 0.06em;
+  height: 0.62em;
+  border-radius: 999px;
+  background: rgba(255, 140, 0, 0.14);
+  filter: blur(0.2px);
+  z-index: -1;
 }
 
 .intro__note {
@@ -24,22 +70,24 @@
   opacity: 0.9;
 }
 
-/* рукописный акцент */
 .script {
   font-family: 'Marck Script', 'Inter', cursive;
   font-size: 22px;
   line-height: 1.1;
 }
 
-/* кнопка: чуть “премиум” */
 .intro__btn {
   border-radius: 999px;
   padding: 14px 28px;
-  font-weight: 600;
+  font-weight: 650;
   cursor: pointer;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
-  transition: transform 0.15s ease;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.2s ease;
 }
+
 .intro__btn:active {
   transform: translateY(1px);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.12);
 }
