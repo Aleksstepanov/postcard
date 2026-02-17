@@ -17,23 +17,22 @@
     filter 0.2s ease;
 }
 
-/* размеры */
 .btn--md {
   padding: 12px 22px;
   font-size: 16px;
 }
 
 .btn--lg {
-  padding: 14px 28px;
+  padding: 16px 34px;
   font-size: 18px;
+  min-height: 52px;
+  min-width: 220px;
 }
 
-/* ширина */
 .btn--full {
   width: 100%;
 }
 
-/* состояния */
 .btn:hover:not(:disabled) {
   filter: brightness(1.02);
 }

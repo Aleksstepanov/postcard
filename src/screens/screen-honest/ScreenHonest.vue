@@ -69,7 +69,7 @@
 
   const canGoNext = computed(() => prettyValue.value.length > 0);
 
-  onMounted(() => {
+  const startScreen = () => {
     timer = window.setInterval(() => {
       if (isFocused.value && rawValue.value.trim().length > 0) return;
       idx.value += 1;
@@ -95,12 +95,7 @@
         );
       }
     }
-  });
-
-  onUnmounted(() => {
-    if (timer) window.clearInterval(timer);
-    rawValue.value = '';
-  });
+  };
 
   watch(
     () => props.active,
@@ -108,6 +103,8 @@
       if (!isActive) {
         if (timer) window.clearInterval(timer);
         rawValue.value = '';
+      } else {
+        startScreen();
       }
     },
     { immediate: true },
